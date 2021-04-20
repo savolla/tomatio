@@ -1,3 +1,7 @@
+/*
+** TODO: developer info
+ */
+
 #define SHIFTR_CLOCK2        (6)
 #define SHIFTR_DATA2         (5)
 #define SHIFTR_CLOCK         (4)
@@ -20,10 +24,16 @@ const unsigned char encodedSevenSegmentNumbers[10] = {
 };
 
 // function declarations
+// Abstraction level 3
+char adjustTime( void );
+
+// Abstraction level 2
+void displayMinute( const char );
+
+// Abstraction level 1
 void sevenSegmentShowNumber( const char, const char, const char );
 void clearPreviousNumber( void );
 void updateSevenSegment( void );
-void displayMinute( const char );
 
 // runtime
 void setup(void) {
@@ -38,15 +48,15 @@ void setup(void) {
   pinMode(SHIFTR_CLEAR,         OUTPUT);
   pinMode(SHIFTR_OUTPUT_ENABLE, OUTPUT);
 
+  
     // handling Active Low pins
     digitalWrite(SHIFTR_CLEAR, HIGH);
+
+  pinMode(A0, INPUT);
 }
 
 void loop(void) {
-        for ( char i = 0; i < 100; i++ ) {
-        displayMinute( i );
-        delay(1000);
-    }
+        adjustTime();
 }
 
 // function definitions
@@ -58,7 +68,6 @@ void displayMinute( const char minute ) {
     sevenSegmentShowNumber( tensDigit, SHIFTR_DATA, SHIFTR_CLOCK );
     updateSevenSegment();
 }
-
 
 void sevenSegmentShowNumber( const char number,
                              const char serialDataPin,
@@ -76,4 +85,15 @@ void clearPreviousNumber( void ) {
 void updateSevenSegment( void ) {
     digitalWrite(SHIFTR_LATCH, HIGH);
     digitalWrite(SHIFTR_LATCH, LOW);
+}
+
+char adjustTime( void ) {
+  int potValue;
+  char _time;
+  while ( 1 ) {
+        potValue = analogRead(A0);
+        _time = potValue/11;
+        displayMinute(_time);          
+  }
+  return _time;
 }
