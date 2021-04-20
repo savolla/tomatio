@@ -5,16 +5,16 @@
 #define SHIFTR_OUTPUT_ENABLE (0)
 
 const char encodedSevenSegmentNumbers[10] = {
-/* 0 */ 63,
-/* 1 */ 6,
-/* 2 */ 91,
-/* 3 */ 79,
-/* 4 */ 102,
-/* 5 */ 109,
-/* 6 */ 124,
-/* 7 */ 7,
-/* 8 */ 255,
-/* 9 */ 103,
+/* 0 */ 64,
+/* 1 */ 121,
+/* 2 */ 36,
+/* 3 */ 48,
+/* 4 */ 25,
+/* 5 */ 18,
+/* 6 */ 3,
+/* 7 */ 120,
+/* 8 */ 128,
+/* 9 */ 24
 };
 
 // function declarations
@@ -24,21 +24,21 @@ void updateSevenSegment( void );
 
 // runtime
 void setup(void) {
-    // setting pin modes
-	pinMode(SHIFTR_CLOCK,         OUTPUT);
-	pinMode(SHIFTR_LATCH,         OUTPUT);
-	pinMode(SHIFTR_DATA,          OUTPUT);
-	pinMode(SHIFTR_CLEAR,         OUTPUT);
-	pinMode(SHIFTR_OUTPUT_ENABLE, OUTPUT);
+// setting pin modes
+  pinMode(SHIFTR_CLOCK,         OUTPUT);
+  pinMode(SHIFTR_LATCH,         OUTPUT);
+  pinMode(SHIFTR_DATA,          OUTPUT);
+  pinMode(SHIFTR_CLEAR,         OUTPUT);
+  pinMode(SHIFTR_OUTPUT_ENABLE, OUTPUT);
 
     // handling Active Low pins
-    digitalWrite(SHIFTR_CLEAR, HIGH);  
+    digitalWrite(SHIFTR_CLEAR, HIGH);
 }
 
 void loop(void) {
-    for ( char i = 0; i < 10; i++ ) {
+        for ( char i = 0; i < 10; i++ ) {
         sevenSegmentShowNumber( i );
-	   delay(500);
+        delay(1000);
     }
 }
 
