@@ -1,0 +1,361 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Display_Character:KCSA02-107 U3
+U 1 1 607F2BB6
+P 6800 3600
+F 0 "U3" H 6800 4267 50  0000 C CNN
+F 1 "KCSA02-107" H 6800 4176 50  0000 C CNN
+F 2 "Display_7Segment:KCSC02-107" H 6800 3000 50  0001 C CNN
+F 3 "http://www.kingbright.com/attachments/file/psearch/000/00/00/KCSA02-107(Ver.10A).pdf" H 6300 4075 50  0001 L CNN
+	1    6800 3600
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R0
+U 1 1 607FDD0F
+P 6200 3300
+F 0 "R0" V 6407 3300 50  0000 C CNN
+F 1 "1.5K" V 6316 3300 50  0000 C CNN
+F 2 "" V 6130 3300 50  0001 C CNN
+F 3 "~" H 6200 3300 50  0001 C CNN
+	1    6200 3300
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R1
+U 1 1 60804FBE
+P 6200 3400
+F 0 "R1" V 6407 3400 50  0000 C CNN
+F 1 "1.5K" V 6316 3400 50  0000 C CNN
+F 2 "" V 6130 3400 50  0001 C CNN
+F 3 "~" H 6200 3400 50  0001 C CNN
+	1    6200 3400
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R2
+U 1 1 608052A6
+P 6200 3500
+F 0 "R2" V 6407 3500 50  0000 C CNN
+F 1 "1.5K" V 6316 3500 50  0000 C CNN
+F 2 "" V 6130 3500 50  0001 C CNN
+F 3 "~" H 6200 3500 50  0001 C CNN
+	1    6200 3500
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R3
+U 1 1 60805534
+P 6200 3600
+F 0 "R3" V 6407 3600 50  0000 C CNN
+F 1 "1.5K" V 6316 3600 50  0000 C CNN
+F 2 "" V 6130 3600 50  0001 C CNN
+F 3 "~" H 6200 3600 50  0001 C CNN
+	1    6200 3600
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R4
+U 1 1 60805781
+P 6200 3700
+F 0 "R4" V 6407 3700 50  0000 C CNN
+F 1 "1.5K" V 6316 3700 50  0000 C CNN
+F 2 "" V 6130 3700 50  0001 C CNN
+F 3 "~" H 6200 3700 50  0001 C CNN
+	1    6200 3700
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R5
+U 1 1 60805A8D
+P 6200 3800
+F 0 "R5" V 6407 3800 50  0000 C CNN
+F 1 "1.5K" V 6316 3800 50  0000 C CNN
+F 2 "" V 6130 3800 50  0001 C CNN
+F 3 "~" H 6200 3800 50  0001 C CNN
+	1    6200 3800
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R6
+U 1 1 60805D91
+P 6200 3900
+F 0 "R6" V 6407 3900 50  0000 C CNN
+F 1 "1.5K" V 6316 3900 50  0000 C CNN
+F 2 "" V 6130 3900 50  0001 C CNN
+F 3 "~" H 6200 3900 50  0001 C CNN
+	1    6200 3900
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	6350 3300 6500 3300
+Wire Wire Line
+	6350 3400 6500 3400
+Wire Wire Line
+	6350 3500 6500 3500
+Wire Wire Line
+	6350 3600 6500 3600
+Wire Wire Line
+	6350 3700 6500 3700
+Wire Wire Line
+	6350 3800 6500 3800
+Wire Wire Line
+	6350 3900 6500 3900
+$Comp
+L MCU_Module:Arduino_UNO_R2 A1
+U 1 1 607E744E
+P 3800 3700
+F 0 "A1" H 3800 4881 50  0000 C CNN
+F 1 "Arduino_UNO_R2" H 3800 4790 50  0000 C CNN
+F 2 "Module:Arduino_UNO_R2" H 3800 3700 50  0001 C CIN
+F 3 "https://www.arduino.cc/en/Main/arduinoBoardUno" H 3800 3700 50  0001 C CNN
+	1    3800 3700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3300 3100 3200 3100
+Wire Wire Line
+	3200 3100 3200 2400
+Wire Wire Line
+	3200 2400 4350 2400
+Wire Wire Line
+	4350 2400 4350 3900
+Wire Wire Line
+	4350 3900 5000 3900
+Wire Wire Line
+	3300 3200 3100 3200
+Wire Wire Line
+	3100 3200 3100 2300
+Wire Wire Line
+	3100 2300 4450 2300
+Wire Wire Line
+	4450 2300 4450 3600
+Wire Wire Line
+	4450 3600 5000 3600
+Wire Wire Line
+	3300 3300 3000 3300
+Wire Wire Line
+	3000 3300 3000 2200
+Wire Wire Line
+	3000 2200 4550 2200
+Wire Wire Line
+	4550 2200 4550 3300
+Wire Wire Line
+	4550 3300 5000 3300
+Wire Wire Line
+	3300 3400 2900 3400
+Wire Wire Line
+	2900 3400 2900 2100
+Wire Wire Line
+	2900 2100 4650 2100
+Wire Wire Line
+	4650 2100 4650 3800
+Wire Wire Line
+	4650 3800 5000 3800
+Wire Wire Line
+	3300 3500 2800 3500
+Wire Wire Line
+	2800 3500 2800 2000
+Wire Wire Line
+	2800 2000 4750 2000
+Wire Wire Line
+	4750 2000 4750 3500
+Wire Wire Line
+	4750 3500 5000 3500
+Wire Wire Line
+	5800 3900 6050 3900
+Wire Wire Line
+	5800 3800 6050 3800
+Wire Wire Line
+	5800 3700 6050 3700
+Wire Wire Line
+	5800 3600 6050 3600
+Wire Wire Line
+	5800 3500 6050 3500
+Wire Wire Line
+	5800 3400 6050 3400
+Wire Wire Line
+	5800 3300 6050 3300
+Wire Wire Line
+	5800 4200 5950 4200
+Wire Wire Line
+	4800 4550 4800 4900
+Wire Wire Line
+	4800 4900 5000 4900
+Wire Wire Line
+	4650 3800 4650 5400
+Wire Wire Line
+	4650 5400 5000 5400
+Connection ~ 4650 3800
+Wire Wire Line
+	4350 3900 4350 5500
+Wire Wire Line
+	4350 5500 5000 5500
+Connection ~ 4350 3900
+Wire Wire Line
+	4450 3600 4450 5200
+Wire Wire Line
+	4450 5200 5000 5200
+Connection ~ 4450 3600
+Wire Wire Line
+	4750 3500 4750 5100
+Wire Wire Line
+	4750 5100 5000 5100
+Connection ~ 4750 3500
+Wire Wire Line
+	5950 4550 4800 4550
+Wire Wire Line
+	5950 4200 5950 4550
+Wire Wire Line
+	5800 4900 6050 4900
+Wire Wire Line
+	5800 5000 6050 5000
+Wire Wire Line
+	5800 5100 6050 5100
+Wire Wire Line
+	5800 5200 6050 5200
+Wire Wire Line
+	5800 5300 6050 5300
+Wire Wire Line
+	5800 5400 6050 5400
+Wire Wire Line
+	5800 5500 6050 5500
+Wire Wire Line
+	6350 5500 6500 5500
+Wire Wire Line
+	6350 5400 6500 5400
+Wire Wire Line
+	6350 5300 6500 5300
+Wire Wire Line
+	6350 5200 6500 5200
+Wire Wire Line
+	6350 5100 6500 5100
+Wire Wire Line
+	6350 5000 6500 5000
+Wire Wire Line
+	6350 4900 6500 4900
+$Comp
+L Device:R R13
+U 1 1 608376B3
+P 6200 5500
+F 0 "R13" V 6407 5500 50  0000 C CNN
+F 1 "1.5K" V 6316 5500 50  0000 C CNN
+F 2 "" V 6130 5500 50  0001 C CNN
+F 3 "~" H 6200 5500 50  0001 C CNN
+	1    6200 5500
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R12
+U 1 1 608376AD
+P 6200 5400
+F 0 "R12" V 6407 5400 50  0000 C CNN
+F 1 "1.5K" V 6316 5400 50  0000 C CNN
+F 2 "" V 6130 5400 50  0001 C CNN
+F 3 "~" H 6200 5400 50  0001 C CNN
+	1    6200 5400
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R11
+U 1 1 608376A7
+P 6200 5300
+F 0 "R11" V 6407 5300 50  0000 C CNN
+F 1 "1.5K" V 6316 5300 50  0000 C CNN
+F 2 "" V 6130 5300 50  0001 C CNN
+F 3 "~" H 6200 5300 50  0001 C CNN
+	1    6200 5300
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R10
+U 1 1 608376A1
+P 6200 5200
+F 0 "R10" V 6407 5200 50  0000 C CNN
+F 1 "1.5K" V 6316 5200 50  0000 C CNN
+F 2 "" V 6130 5200 50  0001 C CNN
+F 3 "~" H 6200 5200 50  0001 C CNN
+	1    6200 5200
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R9
+U 1 1 6083769B
+P 6200 5100
+F 0 "R9" V 6407 5100 50  0000 C CNN
+F 1 "1.5K" V 6316 5100 50  0000 C CNN
+F 2 "" V 6130 5100 50  0001 C CNN
+F 3 "~" H 6200 5100 50  0001 C CNN
+	1    6200 5100
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R8
+U 1 1 60837695
+P 6200 5000
+F 0 "R8" V 6407 5000 50  0000 C CNN
+F 1 "1.5K" V 6316 5000 50  0000 C CNN
+F 2 "" V 6130 5000 50  0001 C CNN
+F 3 "~" H 6200 5000 50  0001 C CNN
+	1    6200 5000
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R7
+U 1 1 6083768F
+P 6200 4900
+F 0 "R7" V 6407 4900 50  0000 C CNN
+F 1 "1.5K" V 6316 4900 50  0000 C CNN
+F 2 "" V 6130 4900 50  0001 C CNN
+F 3 "~" H 6200 4900 50  0001 C CNN
+	1    6200 4900
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Display_Character:KCSA02-107 U4
+U 1 1 60837689
+P 6800 5200
+F 0 "U4" H 6800 5867 50  0000 C CNN
+F 1 "KCSA02-107" H 6800 5776 50  0000 C CNN
+F 2 "Display_7Segment:KCSC02-107" H 6800 4600 50  0001 C CNN
+F 3 "http://www.kingbright.com/attachments/file/psearch/000/00/00/KCSA02-107(Ver.10A).pdf" H 6300 5675 50  0001 L CNN
+	1    6800 5200
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC595 U2
+U 1 1 6082D8D0
+P 5400 5300
+F 0 "U2" H 5400 6081 50  0000 C CNN
+F 1 "74HC595" H 5400 5990 50  0000 C CNN
+F 2 "" H 5400 5300 50  0001 C CNN
+F 3 "http://www.ti.com/lit/ds/symlink/sn74hc595.pdf" H 5400 5300 50  0001 C CNN
+	1    5400 5300
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC595 U1
+U 1 1 607E4920
+P 5400 3700
+F 0 "U1" H 5400 4481 50  0000 C CNN
+F 1 "74HC595" H 5400 4390 50  0000 C CNN
+F 2 "" H 5400 3700 50  0001 C CNN
+F 3 "http://www.ti.com/lit/ds/symlink/sn74hc595.pdf" H 5400 3700 50  0001 C CNN
+	1    5400 3700
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
