@@ -9,6 +9,7 @@
 #define SHIFTR_DATA          (2)
 #define SHIFTR_CLEAR         (1)
 #define SHIFTR_OUTPUT_ENABLE (0)
+#define POT_BUTTON           (7)
 
 const unsigned char encodedSevenSegmentNumbers[10] = {
 /* 0 */ 0b11111100,
@@ -48,15 +49,22 @@ void setup(void) {
   pinMode(SHIFTR_CLEAR,         OUTPUT);
   pinMode(SHIFTR_OUTPUT_ENABLE, OUTPUT);
 
-  
+
     // handling Active Low pins
     digitalWrite(SHIFTR_CLEAR, HIGH);
 
   pinMode(A0, INPUT);
+  pinMode(POT_BUTTON, INPUT);
+  pinMode(8, OUTPUT);
 }
 
 void loop(void) {
-        adjustTime();
+	adjustTime();
+/*
+  if ( digitalRead(POT_BUTTON) == HIGH ) {
+	digitalWrite(8, HIGH);
+  }
+*/
 }
 
 // function definitions
@@ -92,8 +100,8 @@ char adjustTime( void ) {
   char _time;
   while ( 1 ) {
         potValue = analogRead(A0);
-        _time = potValue/11;
-        displayMinute(_time);          
+        _time = potValue/20;
+        displayMinute(_time);
   }
   return _time;
 }
