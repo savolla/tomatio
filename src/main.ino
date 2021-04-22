@@ -3,15 +3,21 @@
  * @mail  : savolla@protonmail.com
  */
 
-#define SHIFTR_CLOCK2            (6)
-#define SHIFTR_DATA2             (5)
-#define SHIFTR_CLOCK             (4)
-#define SHIFTR_LATCH             (3)
-#define SHIFTR_DATA              (2)
-#define SHIFTR_CLEAR             (1)
+// Arduino pins
 #define SHIFTR_OUTPUT_ENABLE     (0)
+#define SHIFTR_CLEAR             (1)
+#define SHIFTR_DATA              (2)
+#define SHIFTR_LATCH             (3)
+#define SHIFTR_CLOCK             (4)
+#define SHIFTR_DATA2             (5)
+#define SHIFTR_CLOCK2            (6)
 #define POT_BUTTON               (7)
+#define LED_RED                  (8)
+#define LED_GREEN                (9)
+#define LED_YELLOW               (10)
+#define BUZZER                   (11)
 #define POTENTIOMETER            (A0)
+
 #define POT_ADJUSTMENT_THRESHOLD (25)
 
 unsigned char DEFAULT_WORK_TIME = 25;// minutes
