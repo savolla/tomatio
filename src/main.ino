@@ -1,15 +1,24 @@
 /*
-** TODO: developer info
+ * @author: Oleksiy Nehlyadyuk
+ * @mail  : savolla@protonmail.com
  */
 
-#define SHIFTR_CLOCK2        (6)
-#define SHIFTR_DATA2         (5)
-#define SHIFTR_CLOCK         (4)
-#define SHIFTR_LATCH         (3)
-#define SHIFTR_DATA          (2)
-#define SHIFTR_CLEAR         (1)
-#define SHIFTR_OUTPUT_ENABLE (0)
-#define POT_BUTTON           (7)
+#define SHIFTR_CLOCK2            (6)
+#define SHIFTR_DATA2             (5)
+#define SHIFTR_CLOCK             (4)
+#define SHIFTR_LATCH             (3)
+#define SHIFTR_DATA              (2)
+#define SHIFTR_CLEAR             (1)
+#define SHIFTR_OUTPUT_ENABLE     (0)
+#define POT_BUTTON               (7)
+#define POTENTIOMETER            (A0)
+#define POT_ADJUSTMENT_THRESHOLD (25)
+
+unsigned char DEFAULT_WORK_TIME = 25;// minutes
+unsigned char DEFAULT_REST_TIME = 5; // minutes
+unsigned char DEFAULT_ROUNDS    = 4; 
+
+unsigned int initialPotValue;     
 
 const unsigned char encodedSevenSegmentNumbers[10] = {
 /* 0 */ 0b11111100,
@@ -26,7 +35,7 @@ const unsigned char encodedSevenSegmentNumbers[10] = {
 
 // function declarations
 // Abstraction level 3
-char adjustTime( void );
+unsigned char adjustWorkTime( void );
 
 // Abstraction level 2
 void displayMinute( const char );
@@ -50,21 +59,24 @@ void setup(void) {
   pinMode(SHIFTR_OUTPUT_ENABLE, OUTPUT);
 
 
-    // handling Active Low pins
-    digitalWrite(SHIFTR_CLEAR, HIGH);
+  // handling Active Low pins
+  digitalWrite(SHIFTR_CLEAR, HIGH);
 
   pinMode(A0, INPUT);
   pinMode(POT_BUTTON, INPUT);
-  pinMode(8, OUTPUT);
+  pinMode(8, OUTPUT); 
 }
 
 void loop(void) {
-	adjustTime();
-/*
-  if ( digitalRead(POT_BUTTON) == HIGH ) {
-	digitalWrite(8, HIGH);
-  }
-*/
+	initialPotValue = analogRead( POTENTIOMETER );
+	while ( ! digitalRead( POT_BUTTON ) ) {
+		if ( isPotAdjusted() ) { 
+			DEFAULT_WORK_TIME = adjustWorkTime();
+		}
+		else {
+			displayMinute( DEFAULT_WORK_TIME );
+		}
+	}		
 }
 
 // function definitions
@@ -95,13 +107,20 @@ void updateSevenSegment( void ) {
     digitalWrite(SHIFTR_LATCH, LOW);
 }
 
-char adjustTime( void ) {
+unsigned char adjustWorkTime( void ) {
   int potValue;
-  char _time;
-  while ( 1 ) {
-        potValue = analogRead(A0);
-        _time = potValue/20;
-        displayMinute(_time);
+  char workTime;
+  while ( ! digitalRead(POT_BUTTON) ) {
+        potValue = analogRead( POTENTIOMETER );
+        workTime = potValue/20;
+        displayMinute( workTime );
   }
-  return _time;
+  return workTime;
+}
+
+bool isPotAdjusted( void ) {
+	return ( analogRead( POTENTIOMETER ) >
+	         (initialPotValue + POT_ADJUSTMENT_THRESHOLD) || 
+	         analogRead( POTENTIOMETER ) <
+	         (initialPotValue - POT_ADJUSTMENT_THRESHOLD) );
 }
