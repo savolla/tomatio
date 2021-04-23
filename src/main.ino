@@ -4,21 +4,22 @@
  */
 
 // Arduino pins
-#define SHIFTR_OUTPUT_ENABLE     (0)
-#define SHIFTR_CLEAR             (1)
-#define SHIFTR_DATA              (2)
-#define SHIFTR_LATCH             (3)
-#define SHIFTR_CLOCK             (4)
-#define SHIFTR_DATA2             (5)
-#define SHIFTR_CLOCK2            (6)
-#define POT_BUTTON               (7)
-#define LED_RED                  (8)
-#define LED_GREEN                (9)
-#define LED_YELLOW               (10)
-#define BUZZER                   (11)
-#define POTENTIOMETER            (A0)
+#define SHIFTR_OUTPUT_ENABLE                 (0)
+#define SHIFTR_CLEAR                         (1)
+#define SHIFTR_DATA                          (2)
+#define SHIFTR_LATCH                         (3)
+#define SHIFTR_CLOCK                         (4)
+#define SHIFTR_DATA2                         (5)
+#define SHIFTR_CLOCK2                        (6)
+#define POT_BUTTON                           (7)
+#define LED_RED                              (8)
+#define LED_GREEN                            (9)
+#define LED_YELLOW                           (10)
+#define BUZZER                               (11)
+#define POTENTIOMETER                        (A0)
 
-#define POT_ADJUSTMENT_THRESHOLD (25)
+#define POT_ADJUSTMENT_THRESHOLD             (25)
+#define TIME_INTEVAL_BETWEEN_BUTTON_PRESSES  (200) // ms
 
 unsigned char DEFAULT_WORK_TIME = 25;// minutes
 unsigned char DEFAULT_REST_TIME = 5; // minutes
@@ -40,11 +41,14 @@ const unsigned char encodedSevenSegmentNumbers[10] = {
 };
 
 // function declarations
+// Abstraction level 4
+void set( unsigned char );
+
 // Abstraction level 3
 unsigned char adjustWorkTime( void );
 
 // Abstraction level 2
-void displayMinute( const char );
+void displayNumber( const char );
 
 // Abstraction level 1
 void sevenSegmentShowNumber( const char, const char, const char );
@@ -74,19 +78,26 @@ void setup(void) {
 }
 
 void loop(void) {
-	initialPotValue = analogRead( POTENTIOMETER );
-	while ( ! digitalRead( POT_BUTTON ) ) {
-		if ( isPotAdjusted() ) { 
-			DEFAULT_WORK_TIME = adjustWorkTime();
-		}
-		else {
-			displayMinute( DEFAULT_WORK_TIME );
-		}
-	}		
+	set( DEFAULT_WORK_TIME );
+	set( DEFAULT_REST_TIME );
+	set( DEFAULT_ROUNDS );
 }
 
 // function definitions
-void displayMinute( const char minute ) {
+void set( unsigned char number ) {
+	initialPotValue = analogRead( POTENTIOMETER );
+	while ( ! digitalRead( POT_BUTTON ) ) {
+		if ( isPotAdjusted() ) { 
+			number = adjust( number );
+		}
+		else {
+			displayNumber( number );
+		}
+	}
+	delay( TIME_INTEVAL_BETWEEN_BUTTON_PRESSES );		
+}
+
+void displayNumber( const char minute ) {
     const char onesDigit = minute%10;
     const char tensDigit = minute/10;
     clearPreviousNumber(); // from Seven Segment
@@ -113,15 +124,14 @@ void updateSevenSegment( void ) {
     digitalWrite(SHIFTR_LATCH, LOW);
 }
 
-unsigned char adjustWorkTime( void ) {
+unsigned char adjust( unsigned char number ) {
   int potValue;
-  char workTime;
   while ( ! digitalRead(POT_BUTTON) ) {
         potValue = analogRead( POTENTIOMETER );
-        workTime = potValue/20;
-        displayMinute( workTime );
+        number = potValue/20;
+        displayNumber( number );
   }
-  return workTime;
+  return number;
 }
 
 bool isPotAdjusted( void ) {
