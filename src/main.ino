@@ -1,6 +1,7 @@
 /*
  * @author: Oleksiy Nehlyadyuk
  * @mail  : savolla@protonmail.com
+ * @time: Fri Apr 23 20:09:50 2021
  */
 
 // Arduino pins
@@ -41,6 +42,7 @@ unsigned char REST_TIME = 5; // minutes
 unsigned char ROUNDS    = 4;
 
 unsigned int initialPotValue;
+unsigned char rounds;
 
 // Values for "Common Cathode" 7-Segment Display
 const unsigned char encodedSevenSegmentNumbers[10] = {
@@ -59,7 +61,7 @@ const unsigned char encodedSevenSegmentNumbers[10] = {
 // function declarations
 // Abstraction level 4
 void pomodoroSession( void );
-void setPomodoroValue( unsigned char );
+void setPomodoroValue( unsigned char* );
 
 // Abstraction level 3
 unsigned char adjustWorkTime( void );
@@ -68,9 +70,10 @@ void turnOffAllLeds( void );
 void notify( NOTIFICATION );
 void startTimer( const unsigned char );
 void showRemaining( unsigned char );
+unsigned char adjust( unsigned char *);
 
 // Abstraction level 2
-void displayNumber( const char );
+void displayNumber( unsigned char );
 void turnOffDisplay( void );
 
 // Abstraction level 1
@@ -80,6 +83,7 @@ void sevenSegmentShowNumber( const char,
                              const char,
                              const char );
 
+// TODO: delete OUTPUT_ENABLE and free pin 0
 // runtime
 void setup(void) {
 
@@ -90,8 +94,8 @@ void setup(void) {
   pinMode( SHIFTR_DATA2,         OUTPUT );
   pinMode( SHIFTR_LATCH,         OUTPUT );
   pinMode( SHIFTR_CLEAR,         OUTPUT );
-  pinMode( SHIFTR_OUTPUT_ENABLE, OUTPUT );
   digitalWrite( SHIFTR_CLEAR,      HIGH ); // Active Low one
+  pinMode( SHIFTR_OUTPUT_ENABLE, OUTPUT );
 
   // Led pins
   pinMode( LED_RED,              OUTPUT );
@@ -103,25 +107,28 @@ void setup(void) {
   pinMode( POT_BUTTON,            INPUT );
 }
 
+// TODO: don't let user to set 0 rounds. set minimum value to 1
 // Main Loop
 void loop(void) {
 
   // setting Work Time
-	ledTurnOn( LED_RED );
-	setPomodoroValue( WORK_TIME );
+  ledTurnOn( LED_RED );
+  setPomodoroValue( &WORK_TIME );
 
   // setting Rest Time
 	ledTurnOn( LED_GREEN );
-	setPomodoroValue( REST_TIME );
+	setPomodoroValue( &REST_TIME );
 
   // setting Rounds
 	ledTurnOn( LED_YELLOW );
-	setPomodoroValue( ROUNDS );
+	setPomodoroValue( &ROUNDS );
 
+	rounds = ROUNDS;
+	
 	do {
+		rounds--;
 		pomodoroSession();
-		ROUNDS--;
-	} while ( ROUNDS );
+	} while ( rounds );
 
 	notify( POMODORO_STOP );
 }
@@ -134,20 +141,20 @@ void pomodoroSession( void ) {
 	startTimer( REST_TIME );
 }
 
-void setPomodoroValue( unsigned char number ) {
+void setPomodoroValue( unsigned char *number ) {
 	initialPotValue = analogRead( POTENTIOMETER );
 	while ( ! digitalRead( POT_BUTTON ) ) {
 		if ( isPotAdjusted() ) {
-			number = adjust( number );
+			*number = adjust( number );
 		}
 		else {
-			displayNumber( number );
+			displayNumber( *number );
 		}
 	}
 	delay( TIME_INTEVAL_BETWEEN_BUTTON_PRESSES );
 }
 
-void displayNumber( const char minute ) {
+void displayNumber( unsigned char minute ) {
     const char onesDigit = minute%10;
     const char tensDigit = minute/10;
     clearPreviousNumber(); // from Seven Segment
@@ -174,14 +181,14 @@ void updateSevenSegment( void ) {
     digitalWrite(SHIFTR_LATCH, LOW);
 }
 
-unsigned char adjust( unsigned char number ) {
+unsigned char adjust( unsigned char *number ) {
   int potValue;
   while ( ! digitalRead(POT_BUTTON) ) {
         potValue = analogRead( POTENTIOMETER );
-        number = potValue/20;
-        displayNumber( number );
+        *number = potValue/20;
+        displayNumber( *number );
   }
-  return number;
+  return *number;
 }
 
 bool isPotAdjusted( void ) {
@@ -219,11 +226,12 @@ void notify( NOTIFICATION mode ) {
 // TODO: write isPressed() function for buttons
 
 void startTimer( unsigned char value ) {
+	// turn off for power management
 	turnOffDisplay();
 	turnOffAllLeds();
-	
+
 	unsigned int _value = value * 60;
-	
+
 	while ( _value ) {
 		if ( digitalRead( POT_BUTTON )) {
 			showRemaining( _value / 60 );
