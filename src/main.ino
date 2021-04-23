@@ -11,22 +11,37 @@
 #define SHIFTR_CLOCK                         (4)
 #define SHIFTR_DATA2                         (5)
 #define SHIFTR_CLOCK2                        (6)
+
 #define POT_BUTTON                           (7)
+
 #define LED_RED                              (8)
 #define LED_GREEN                            (9)
 #define LED_YELLOW                           (10)
+
 #define BUZZER                               (11)
 #define POTENTIOMETER                        (A0)
 
-#define POT_ADJUSTMENT_THRESHOLD             (25)
+// variable macros
+#define POT_ADJUSTMENT_THRESHOLD             (25)  // analog value
+#define NOTIFICATION_NOTE                    (440) // C4 (middle C)
+#define NOTIFICATION_LENGTH                  (100) // ms (since Buzzers sound terrible)
+#define DELAY_BETWEEN_NOTIFICATIONS          (200) // ms
 #define TIME_INTEVAL_BETWEEN_BUTTON_PRESSES  (200) // ms
 
-unsigned char DEFAULT_WORK_TIME = 25;// minutes
-unsigned char DEFAULT_REST_TIME = 5; // minutes
-unsigned char DEFAULT_ROUNDS    = 4; 
+enum NOTIFICATION {
+    REST = 1,
+    POMODORO_START,
+    POMODORO_STOP
+};
 
-unsigned int initialPotValue;     
+// Pomodoro related GLOBAL variables
+unsigned char WORK_TIME = 25;// minutes
+unsigned char REST_TIME = 5; // minutes
+unsigned char ROUNDS    = 4;
 
+unsigned int initialPotValue;
+
+// Values for "Common Cathode" 7-Segment Display
 const unsigned char encodedSevenSegmentNumbers[10] = {
 /* 0 */ 0b11111100,
 /* 1 */ 0b01100000,
@@ -42,59 +57,91 @@ const unsigned char encodedSevenSegmentNumbers[10] = {
 
 // function declarations
 // Abstraction level 4
-void set( unsigned char );
+void pomodoroSession( void );
+void setPomodoroValue( unsigned char );
 
 // Abstraction level 3
 unsigned char adjustWorkTime( void );
+void ledTurnOn( unsigned char );
+void turnOffAllLeds( void );
+void notify( NOTIFICATION );
+void startTimer( const unsigned char );
 
 // Abstraction level 2
 void displayNumber( const char );
 
 // Abstraction level 1
-void sevenSegmentShowNumber( const char, const char, const char );
 void clearPreviousNumber( void );
 void updateSevenSegment( void );
+void sevenSegmentShowNumber( const char,
+                             const char,
+                             const char );
 
 // runtime
 void setup(void) {
-  // setting pin modes
 
-  pinMode(SHIFTR_CLOCK,         OUTPUT);
-  pinMode(SHIFTR_CLOCK2,        OUTPUT);
-  pinMode(SHIFTR_DATA,          OUTPUT);
-  pinMode(SHIFTR_DATA2,         OUTPUT);
+  // Shift Register pins
+  pinMode( SHIFTR_CLOCK,         OUTPUT );
+  pinMode( SHIFTR_CLOCK2,        OUTPUT );
+  pinMode( SHIFTR_DATA,          OUTPUT );
+  pinMode( SHIFTR_DATA2,         OUTPUT );
+  pinMode( SHIFTR_LATCH,         OUTPUT );
+  pinMode( SHIFTR_CLEAR,         OUTPUT );
+  pinMode( SHIFTR_OUTPUT_ENABLE, OUTPUT );
+  digitalWrite( SHIFTR_CLEAR,      HIGH ); // Active Low one
 
-  pinMode(SHIFTR_LATCH,         OUTPUT);
-  pinMode(SHIFTR_CLEAR,         OUTPUT);
-  pinMode(SHIFTR_OUTPUT_ENABLE, OUTPUT);
+  // Led pins
+  pinMode( LED_RED,              OUTPUT );
+  pinMode( LED_YELLOW,           OUTPUT );
+  pinMode( LED_GREEN,            OUTPUT );
 
-
-  // handling Active Low pins
-  digitalWrite(SHIFTR_CLEAR, HIGH);
-
-  pinMode(A0, INPUT);
-  pinMode(POT_BUTTON, INPUT);
-  pinMode(8, OUTPUT); 
+  // Potentiometer pins
+  pinMode( POTENTIOMETER,         INPUT );
+  pinMode( POT_BUTTON,            INPUT );
 }
 
+// Main Loop
 void loop(void) {
-	set( DEFAULT_WORK_TIME );
-	set( DEFAULT_REST_TIME );
-	set( DEFAULT_ROUNDS );
+
+  // setting Work Time
+	ledTurnOn( LED_RED );
+	setPomodoroValue( WORK_TIME );
+
+  // setting Rest Time
+	ledTurnOn( LED_GREEN );
+	setPomodoroValue( REST_TIME );
+
+  // setting Rounds
+	ledTurnOn( LED_YELLOW );
+	setPomodoroValue( ROUNDS );
+
+	do {
+		pomodoroSession();
+		ROUNDS--;
+	} while ( ROUNDS );
+
+	notify( POMODORO_STOP );
 }
 
 // function definitions
-void set( unsigned char number ) {
+void pomodoroSession( void ) {
+	notify( POMODORO_START );
+	startTimer( WORK_TIME );
+	notify( REST );
+	startTimer( REST_TIME );
+}
+
+void setPomodoroValue( unsigned char number ) {
 	initialPotValue = analogRead( POTENTIOMETER );
 	while ( ! digitalRead( POT_BUTTON ) ) {
-		if ( isPotAdjusted() ) { 
+		if ( isPotAdjusted() ) {
 			number = adjust( number );
 		}
 		else {
 			displayNumber( number );
 		}
 	}
-	delay( TIME_INTEVAL_BETWEEN_BUTTON_PRESSES );		
+	delay( TIME_INTEVAL_BETWEEN_BUTTON_PRESSES );
 }
 
 void displayNumber( const char minute ) {
@@ -136,7 +183,39 @@ unsigned char adjust( unsigned char number ) {
 
 bool isPotAdjusted( void ) {
 	return ( analogRead( POTENTIOMETER ) >
-	         (initialPotValue + POT_ADJUSTMENT_THRESHOLD) || 
+	         (initialPotValue + POT_ADJUSTMENT_THRESHOLD) ||
 	         analogRead( POTENTIOMETER ) <
 	         (initialPotValue - POT_ADJUSTMENT_THRESHOLD) );
+}
+
+void ledTurnOn( unsigned char led ) {
+	turnOffAllLeds();
+	digitalWrite( led, HIGH );
+}
+
+void turnOffAllLeds( void ) {
+	digitalWrite( LED_RED, LOW );
+	digitalWrite( LED_YELLOW, LOW );
+	digitalWrite( LED_GREEN, LOW );
+}
+
+void turnOffDisplay( void ) {
+	clearPreviousNumber();
+	updateSevenSegment();
+}
+
+void notify( NOTIFICATION mode ) {
+	for ( char i = mode; i != 0; i--) {
+		tone( BUZZER, NOTIFICATION_NOTE );
+		delay( NOTIFICATION_LENGTH );
+		noTone( BUZZER );
+		delay( DELAY_BETWEEN_NOTIFICATIONS );
+	}
+}
+
+void startTimer( const unsigned char value ) {
+	turnOffDisplay();
+	turnOffAllLeds();
+	short seconds = value * 60000;
+	delay( seconds );
 }
