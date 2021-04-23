@@ -27,6 +27,7 @@
 #define NOTIFICATION_LENGTH                  (100) // ms (since Buzzers sound terrible)
 #define DELAY_BETWEEN_NOTIFICATIONS          (200) // ms
 #define TIME_INTEVAL_BETWEEN_BUTTON_PRESSES  (200) // ms
+#define SECOND                               (1000)// ms
 
 enum NOTIFICATION {
     REST = 1,
@@ -66,9 +67,11 @@ void ledTurnOn( unsigned char );
 void turnOffAllLeds( void );
 void notify( NOTIFICATION );
 void startTimer( const unsigned char );
+void showRemaining( unsigned char );
 
 // Abstraction level 2
 void displayNumber( const char );
+void turnOffDisplay( void );
 
 // Abstraction level 1
 void clearPreviousNumber( void );
@@ -213,9 +216,26 @@ void notify( NOTIFICATION mode ) {
 	}
 }
 
-void startTimer( const unsigned char value ) {
+// TODO: write isPressed() function for buttons
+
+void startTimer( unsigned char value ) {
 	turnOffDisplay();
 	turnOffAllLeds();
-	short seconds = value * 60000;
-	delay( seconds );
+	
+	unsigned int _value = value * 60;
+	
+	while ( _value ) {
+		if ( digitalRead( POT_BUTTON )) {
+			showRemaining( _value / 60 );
+		}
+		delay( 1000 );
+		_value--;
+	}
+}
+
+void showRemaining( unsigned char value ) {
+	displayNumber( value );
+	delay( 1000 );
+	turnOffDisplay();
+	value = value - 1000;
 }
